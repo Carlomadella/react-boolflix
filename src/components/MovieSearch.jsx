@@ -2,6 +2,29 @@ import { useState } from "react";
 import axios from "axios";
 import Flag from "./ReactFlagsSelect";
 
+function getStars(vote) {
+  let fullStars = 0;
+
+  if (vote <= 2) fullStars = 1;
+  else if (vote <= 4) fullStars = 2;
+  else if (vote <= 6) fullStars = 3;
+  else if (vote <= 8) fullStars = 4;
+  else fullStars = 5;
+
+  const emptyStars = 5 - fullStars;
+
+  return (
+    <>
+      {[...Array(fullStars)].map((_, i) => (
+        <i key={`full-${i}`} className="fa-solid fa-star text-warning me-1"></i>
+      ))}
+      {[...Array(emptyStars)].map((_, i) => (
+        <i key={`empty-${i}`} className="fa-regular fa-star text-muted me-1"></i>
+      ))}
+    </>
+  );
+}
+
 const MovieSearch = () => {
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
@@ -58,12 +81,15 @@ const MovieSearch = () => {
             <img
               className="card-img-top"
               alt={movie.title}
+              src={`https://image.tmdb.org/t/p/w342${movie.poster_path}`}
             />
             <div className="card-body">
               <h3 className="card-title">{movie.title}</h3>
               <p className="card-text"><strong>Titolo originale:</strong> {movie.original_title}</p>
               <p className="card-text"><strong>Lingua:</strong> <Flag lang={movie.original_language} /></p>
-              <p className="card-text"><strong>Voto:</strong> {movie.vote_average}</p>
+              <p className="card-text">
+                <strong>Voto:</strong> {getStars(movie.vote_average)}
+              </p>
             </div>
           </div>
         ))}
@@ -75,12 +101,15 @@ const MovieSearch = () => {
             <img
               className="card-img-top"
               alt={tv.original_name}
+              src={`https://image.tmdb.org/t/p/w342${tv.poster_path}`}
             />
             <div className="card-body">
-              <h3 className="card-title">{tv.name}</h3>
+              <h4 className="card-title">{tv.name}</h4>
               <p className="card-text"><strong>Titolo originale:</strong> {tv.original_name}</p>
               <p className="card-text"><strong>Lingua:</strong> <Flag lang={tv.original_language} /></p>
-              <p className="card-text"><strong>Voto:</strong> {tv.vote_average}</p>
+              <p className="card-text">
+                <strong>Voto:</strong> {getStars(tv.vote_average)}
+              </p>
             </div>
           </div>
         ))}
